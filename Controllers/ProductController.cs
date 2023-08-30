@@ -20,16 +20,15 @@ namespace InventoryAPI.Controllers
         [HttpGet]
         public ActionResult<List<Products>> Allproducts()
         {
-           var prod = _service.GetProducts();
+            var prod = _service.GetProducts();
             return prod;
-            
         }
 
         [HttpGet("{id}")]
         public ActionResult<Products> GetProd(int? id)
         {
             var prod = _service.GetProduct(id);
-            if(id == null)
+            if (prod == null)
             {
                 return NotFound();
             }
@@ -43,7 +42,20 @@ namespace InventoryAPI.Controllers
             _service.Create(prod);
             return CreatedAtAction(nameof(GetProd), new { id = prod.Id }, prod);
 
+        }
 
+        [HttpDelete]
+        [Route("{id}")]
+        public ActionResult Delete(int? id)
+        {
+            var Delitem = _service.GetProduct(id);
+            if(Delitem == null)
+            {
+                return NotFound();   
+            }
+
+            _service.Delete(Delitem.Id);
+            return NoContent();
         }
     }
 

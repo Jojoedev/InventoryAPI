@@ -38,7 +38,10 @@ namespace InventoryAPI.Services
 
         public void Delete(int? id)
         {
-            throw new NotImplementedException();
+            var DelItem = products.FindIndex(x => x.Id == id);
+            products.RemoveAt(DelItem);
+            
         }
     }
 }
+
