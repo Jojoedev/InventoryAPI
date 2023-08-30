@@ -1,4 +1,5 @@
-﻿using InventoryAPI.Models;
+﻿using InventoryAPI.InterfaceRepo;
+using InventoryAPI.Models;
 using InventoryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,10 @@ namespace InventoryAPI.Controllers
     public class ProductController : Controller
     {
 
-        private readonly ProductService _service;
-        public ProductController()
+        private readonly IProductInterface _service;
+        public ProductController(IProductInterface service)
         {
-            _service = new ProductService();
+            _service = service;
         }
 
 
@@ -20,14 +21,14 @@ namespace InventoryAPI.Controllers
         public ActionResult<List<Products>> Allproducts()
         {
            var prod = _service.GetProducts();
-            return Ok(prod);
+            return prod;
             
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetProd(int? id)
+        public ActionResult<Products> GetProd(int? id)
         {
-          var prod=  _service.GetProducts().FirstOrDefault(x => x.Id == id);
+            var prod = _service.GetProduct(id);
             if(id == null)
             {
                 return NotFound();
@@ -37,7 +38,7 @@ namespace InventoryAPI.Controllers
 
 
         [HttpPost]
-        public ActionResult<Products> CreateNew(Products prod)
+        public IActionResult CreateNew(Products prod)
         {
             _service.Create(prod);
             return CreatedAtAction(nameof(GetProd), new { id = prod.Id }, prod);
