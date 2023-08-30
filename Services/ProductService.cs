@@ -33,7 +33,8 @@ namespace InventoryAPI.Services
 
         public void Update(int? id)
         {
-            throw new NotImplementedException();
+            var UpdateItem = products.Where(products => products.Id == id).FirstOrDefault();
+            
         }
 
         public void Delete(int? id)

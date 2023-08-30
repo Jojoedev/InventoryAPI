@@ -49,14 +49,33 @@ namespace InventoryAPI.Controllers
         public ActionResult Delete(int? id)
         {
             var Delitem = _service.GetProduct(id);
-            if(Delitem == null)
+            if (Delitem == null)
             {
-                return NotFound();   
+                return NotFound();
             }
 
             _service.Delete(Delitem.Id);
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public ActionResult Update(Products products, int id)
+        {
+
+            var product = _service.GetProduct(id);
+            if(product == null)
+            {
+                return NotFound();
+            }
+
+            Products prod = product;
+            prod.Name = products.Name;
+            prod.Quantity = products.Quantity;
+
+            return NoContent();
+            
+        }
+       
     }
 
 }
