@@ -4,7 +4,7 @@ namespace InventoryAPI.InterfaceRepo
 {
     public interface IProductInterface
     {
-        List<Products> GetProducts();
+        IEnumerable<Products> GetProducts();
         Products GetProduct(int? id);
         void Create(Products product);
         void Update(int? id);

@@ -8,13 +8,14 @@ namespace InventoryAPI.Services
     {
       private readonly List<Products> products = new List<Products>()
         {
-            new Products(){Id= 1, Name="Cornflakes", Quantity = 10},
-            new Products(){Id = 2, Name="Sardines", Quantity = 14},
-            new Products(){Id = 3, Name="Yoghurt", Quantity = 20}
+            new Products(){Id= 1, Name="Cornflakes", Quantity = 10, CreditCard="1234wq", SocialSecuityNo="we323" },
+            new Products(){Id = 2, Name="Sardines", Quantity = 14, CreditCard="5434mo", SocialSecuityNo="Year093"},
+            new Products(){Id = 3, Name="Yoghurt", Quantity = 20, CreditCard="9854wq", SocialSecuityNo="kl23"},
+            new Products(){Id = 4, Name="Rice", Quantity = 12, CreditCard="Ywahh", SocialSecuityNo="poad423"}
         };
 
 
-        public List<Products> GetProducts()
+        public IEnumerable<Products> GetProducts()
         {
             return products;
         }

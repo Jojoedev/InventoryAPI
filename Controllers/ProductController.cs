@@ -1,4 +1,6 @@
-﻿using InventoryAPI.InterfaceRepo;
+﻿using InventoryAPI.DTOs;
+using InventoryAPI.Extension;
+using InventoryAPI.InterfaceRepo;
 using InventoryAPI.Models;
 using InventoryAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,31 +18,51 @@ namespace InventoryAPI.Controllers
             _service = service;
         }
 
-
         [HttpGet]
-        public ActionResult<List<Products>> Allproducts()
+        public IEnumerable<ProductsDTO> Allproducts()
         {
-            var prod = _service.GetProducts();
+            var prod = _service.GetProducts().Select(x => new ProductsDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Quantity = x.Quantity
+
+            });
             return prod;
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Products> GetProd(int? id)
+        public ActionResult<ProductsDTO> GetProd(int? id)
         {
             var prod = _service.GetProduct(id);
             if (prod == null)
             {
                 return NotFound();
             }
-            return Ok(prod);
+            return new ProductsDTO
+            {
+                Id = prod.Id,
+                Name = prod.Name,
+                Quantity = prod.Quantity
+            };
         }
 
 
         [HttpPost]
-        public IActionResult CreateNew(Products prod)
+        public ActionResult<ProductsDTO> CreateNew(ProductsDTO prodDTO)
         {
-            _service.Create(prod);
-            return CreatedAtAction(nameof(GetProd), new { id = prod.Id }, prod);
+            //Here, the client is creating ProductDTO object and assigning the properties to the domain
+            //entity Products
+
+            Products product = new Products()
+            {
+                Id = prodDTO.Id,
+                Name = prodDTO.Name,
+                Quantity = prodDTO.Quantity
+            };
+
+            _service.Create(product);
+            return CreatedAtAction(nameof(GetProd), new { id = prodDTO.Id }, prodDTO);
 
         }
 
@@ -59,7 +81,7 @@ namespace InventoryAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(Products products, int id)
+        public ActionResult Update(ProductsDTO productDTO, int? id)
         {
 
             var product = _service.GetProduct(id);
@@ -67,10 +89,10 @@ namespace InventoryAPI.Controllers
             {
                 return NotFound();
             }
-
+            // Here, you are created Server domain entity and updated it with ProductsDTO objects
             Products prod = product;
-            prod.Name = products.Name;
-            prod.Quantity = products.Quantity;
+            prod.Name = productDTO.Name;
+            prod.Quantity = productDTO.Quantity;
 
             return NoContent();
             
