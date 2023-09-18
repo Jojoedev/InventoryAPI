@@ -21,13 +21,14 @@ namespace InventoryAPI.Controllers
         [HttpGet]
         public IEnumerable<ProductsDTO> Allproducts()
         {
-            var prod = _service.GetProducts().Select(x => new ProductsDTO
-            {
+            var prod = _service.GetProducts().Select(x => x.ASDTO());
+
+           /*.Select(X => new ProductsDTO
+            * {
                 Id = x.Id,
                 Name = x.Name,
                 Quantity = x.Quantity
-
-            });
+            });*/
             return prod;
         }
 
@@ -39,12 +40,14 @@ namespace InventoryAPI.Controllers
             {
                 return NotFound();
             }
-            return new ProductsDTO
+            return prod.ASDTO();
+                
+            /*    new ProductsDTO
             {
                 Id = prod.Id,
                 Name = prod.Name,
                 Quantity = prod.Quantity
-            };
+            };*/
         }
 
 
@@ -62,7 +65,7 @@ namespace InventoryAPI.Controllers
             };
 
             _service.Create(product);
-            return CreatedAtAction(nameof(GetProd), new { id = prodDTO.Id }, prodDTO);
+            return CreatedAtAction(nameof(GetProd), new { id = product.Id },product.ASDTO());
 
         }
 
@@ -89,7 +92,7 @@ namespace InventoryAPI.Controllers
             {
                 return NotFound();
             }
-            // Here, you are created Server domain entity and updated it with ProductsDTO objects
+            // Here, you have created Server domain entity and updated it with ProductsDTO objects
             Products prod = product;
             prod.Name = productDTO.Name;
             prod.Quantity = productDTO.Quantity;
